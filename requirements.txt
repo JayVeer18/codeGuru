@@ -1,0 +1,12 @@
+streamlit~=1.39.0
+streamlit_ace
+python-dotenv~=1.0.1
+
+langchain-community~=0.3.3
+langchain~=0.3.4
+langchain-core~=0.3.13
+langchain-openai~=0.2.3
+
+nltk
+unstructured[md]
+faiss-cpu
