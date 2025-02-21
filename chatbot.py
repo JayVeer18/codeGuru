@@ -1,6 +1,7 @@
 import os
 from langchain_community.document_loaders import PyPDFLoader,UnstructuredMarkdownLoader
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings,HuggingFaceEndpoint
 from langchain_community.vectorstores.faiss import FAISS
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import ConversationalRetrievalChain
@@ -8,12 +9,14 @@ from langchain_community.callbacks import get_openai_callback
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 
+# find models here https://ollama.com/library?sort=popular
 class Chatbot:
-    def __init__(self, model_name, api_key, file_path, chain_type):
+    def __init__(self, file_path, api_key=None, framework="huggingface", model_name="microsoft/Phi-3-mini-4k-instruct", chain_type="RAG"):
         """
         Initializes the Chatbot class.
 
         Args:
+            framework (str): must be either openai or ollama
             model_name (str): Name of the language model to use.
             api_key (str): API key for the OpenAI service.
             file_path (str): Path to the PDF file for context.
@@ -21,12 +24,22 @@ class Chatbot:
         """
         self.file_path = file_path
         self.chain_type = chain_type
+        self.framework = framework
         self.file_name = os.path.splitext(os.path.basename(file_path))[0]
         self.chat_history = []
 
         # Initialize core components
-        self.embeddings = OpenAIEmbeddings(api_key=api_key)
-        self.llm = ChatOpenAI(model_name=model_name, api_key=api_key)
+        if self.framework == 'openai':
+            self.embeddings = OpenAIEmbeddings(api_key=api_key)
+            self.llm = ChatOpenAI(model_name=model_name, api_key=api_key)
+        else:
+            self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            self.llm = HuggingFaceEndpoint(repo_id=model_name,
+                max_new_tokens=512,
+                top_k=10,
+                temperature=0.01,
+                huggingfacehub_api_token=api_key
+            )
         self.chain = self._initialize_chain()
 
     def _initialize_chain(self):
@@ -41,11 +54,12 @@ class Chatbot:
     def _file_load_and_split(self):
         """Load and split PDF document into chunks."""
         file_extension = os.path.splitext(self.file_path)[1]
-        if '.md' == file_extension:
-            loader = UnstructuredMarkdownLoader(file_path=self.file_path)
+        if file_extension == '.md':
+            loader = UnstructuredMarkdownLoader(self.file_path)
+        elif file_extension == '.pdf':
+            loader = PyPDFLoader(self.file_path)
         else:
-            print('pdf file')
-            loader = PyPDFLoader(file_path=self.file_path, extract_images=True)
+            raise ValueError("Unsupported file format. Only PDF and Markdown are supported.")
         return loader.load_and_split()
 
     def _load_vector_store_as_retriever(self):
@@ -60,10 +74,16 @@ class Chatbot:
             vector_store.save_local(folder_path="./faiss_db", index_name=self.file_name)
         return vector_store.as_retriever()
 
+    # Convert loaded documents into strings by concatenating their content and ignoring metadata
+    def _format_docs(self, docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
     def _create_RAG_chain(self, retriever):
         """Create a RAG-based conversational chain."""
         prompt_template = """
-            You are an intelligent assistant designed to help students with their programming assignments by providing hints and guidance. Your goal is to help them understand the concepts and solve the problems on their own without giving them the direct answers. The instructions for the assignment are provided in a readme.md file. Here are the guidelines you should follow:
+            You are an intelligent assistant designed to help students with their programming assignments by providing hints and guidance.
+             Your goal is to help them understand the concepts and solve the problems on their own without giving them the direct answers no matter what. 
+             The instructions for the assignment are provided in a readme.md file. Here are the guidelines you should follow:
             
             1. Encourage Critical Thinking: Ask questions that guide the student to think about the problem and the steps needed to solve it.
             2. Provide Conceptual Hints: Offer hints that explain the underlying concepts without revealing the exact solution.
@@ -79,7 +99,7 @@ class Chatbot:
             {question}
             """
         prompt = ChatPromptTemplate.from_template(prompt_template)
-        chain = {"context": retriever, "question": RunnablePassthrough()} | prompt | self.llm | StrOutputParser()
+        chain = prompt | self.llm | StrOutputParser()
         return chain
 
     def invoke(self, query):
@@ -88,9 +108,11 @@ class Chatbot:
 
     def _invoke_without_history(self, query):
         """Invoke the chain without chat history for RAG-based responses."""
-        with get_openai_callback() as cb:
-            response = self.chain.invoke(query)
-            print(cb)
+        # with get_openai_callback() as cb:
+        print(query)
+        response = self.chain.invoke({"context": self._load_vector_store_as_retriever() | self._format_docs, "question": RunnablePassthrough()})
+            # print(cb)
+        print(response)
         return response
 
     def _invoke_with_history(self, query):

@@ -1,13 +1,13 @@
 import contextlib
 
 import streamlit as st
-from altair import value
 from streamlit_ace import st_ace
 from chatbot import Chatbot
 from dotenv import load_dotenv
 import os, io, sys
 import subprocess
 
+# ollama run llama3.1:8b
 # Get the directory of the current script (where this Python file is located)
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,15 +24,13 @@ class App:
         self.instr_file_path = instr_file_path
         self.pgm_file_path = pgm_file_path
         self.session_key = session_key
-        self.api_key = os.environ.get("OPENAI_API_KEY")
 
         # Initialize chatbot
-        self.chatbot = Chatbot(
-            model_name="gpt-4o-mini",
-            api_key=self.api_key,
-            file_path=self.instr_file_path,
-            chain_type='RAG'
-        )
+        self.chatbot = Chatbot(file_path=self.instr_file_path, api_key=os.environ.get("OPENAI_API_KEY"), framework="openai",
+                               model_name="gpt-4o-mini", chain_type='RAG')
+
+        # self.chatbot = Chatbot(self.instr_file_path, api_key=os.environ.get("HUGGINGFACE_ACCESS_TOKEN"),
+        #                        framework="huggingface", chain_type="RAG")
 
         # Initialize session state
         self.init_session_state()
