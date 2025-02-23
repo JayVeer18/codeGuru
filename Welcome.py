@@ -26,9 +26,13 @@ st.markdown(
 st.markdown('#### Experiment Instructions : ')
 st.markdown(""" In this experiment, you will be presented with two labs: **easy** and **hard**.  You will have **45 minutes** to complete both labs.  Following the labs, you will be asked to complete a short survey.
 
-You can utilize the integrated ChatGPT assistant within the lab environment for help.  
+You can utilize the integrated ChatGPT assistant within the lab environment for help.""")
 
-Feel free to ask any questions you have.
+st.markdown("""<p style="color:red; font-weight:bold;">
+!!! IMPORTANT : Your changes are not saved unless you press save code button. Also saved code won't be reloaded, saving is only for our internal stats. Please do not refresh the screen.!!!
+</p>""", unsafe_allow_html=True)
+
+st.markdown(""" Feel free to ask any questions you have.
 
 **Good luck!**
 """)

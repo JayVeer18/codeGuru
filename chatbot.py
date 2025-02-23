@@ -95,6 +95,7 @@ class Chatbot:
             4. Use Examples: Provide examples that illustrate similar concepts or problems without directly solving the assignment question.
             5. Encourage Research: Suggest resources or topics the student can research to find the solution on their own.
             6. Avoid Direct Answers: Do not provide the exact code or solution to the assignment questions.
+            7. Sample Code Snippets: If asked about certain code examples, you can provide basic syntax of how they look so that user can use it as a reference.
             
             Here is the content of the shared file with the assignment instructions:
             {context}

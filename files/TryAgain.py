@@ -38,10 +38,15 @@ def magic8(num):
 
 
 def main():
-    askForInput()
-    onlyOneRightAnswer("Would you like your fortune read?y/n\n ", "y")
-    fortuneNum = int(input("Great! Give me your luckiest number from 0-100!\n"))
-    magic8(fortuneNum)  # you will write this one!
+    ''' This Streamlit code editor has limited functionality, user cannot give input. Hence commenting these'''
+    # askForInput()
+    # onlyOneRightAnswer("Would you like your fortune read?y/n\n ", "y")
+    # fortuneNum = int(input("Great! Give me your luckiest number from 0-100!\n"))
+    # magic8(fortuneNum)  # you will write this one!
+
+    '''Testing your program. If you get the expected output, your lab is done'''
+    print("TESTING", magic8(-4))
+    print("TESTING", magic8(70))
 
 
 if __name__ == "__main__":
