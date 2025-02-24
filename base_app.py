@@ -1,4 +1,5 @@
 import io
+import json
 import os
 import re
 import runpy
@@ -220,6 +221,10 @@ class App:
     def save_file(self, py_code):
         try:
             # Save the content of the code editor to a file
+            file_name = self.session_key + '_chat.json'
+            with open(file_name, "w", encoding="utf-8") as file:
+                json.dump(st.session_state[f"messages_{self.session_key}"], file, indent=4, ensure_ascii=False)
+
             file_name = self.session_key + '.py'
             with open(file_name, "w") as file:
                 file.write(py_code)
