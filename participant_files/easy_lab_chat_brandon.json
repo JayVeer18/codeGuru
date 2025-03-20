@@ -1,0 +1,10 @@
+[
+    {
+        "role": "assistant",
+        "content": "In Python, you can create comments using the `#` symbol for single-line comments. For multi-line comments, you can use triple quotes `\"\"\"` or `'''`. Here’s a quick example:\n\n```python\n# This is a single-line comment\n\n\"\"\"\nThis is a \nmulti-line comment.\n\"\"\"\n```\n\nYou can use these to add comments to your code and explain your logic! How would you incorporate comments into your answers for the assignment?"
+    },
+    {
+        "role": "user",
+        "content": "remind me of the syntax for comments in python"
+    }
+]

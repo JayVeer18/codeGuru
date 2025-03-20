@@ -1,0 +1,42 @@
+[
+    {
+        "role": "assistant",
+        "content": "You've made a good attempt at breaking down the logic of the `notAFactorial()` function! However, let's clarify a few points to ensure you fully understand how the loop operates.\n\n1. **Initialization of `total`:** You mentioned that `total` starts at 0. When calculating a factorial, typically, you would want to start `total` at 1, not 0, because multiplying by 0 will always yield 0, which is not the correct result for a factorial.\n\n2. **While Loop Condition:** The condition `while(num == num)` is always true as long as `num` is not altered in a way that it becomes something other than itself. However, if you want to calculate the factorial, you should be checking a condition that depends on reducing `num`, such as `while num > 0`.\n\n3. **Iterations:** You correctly identified that `num` will decrement from 9 to 0. However, the question is about how many times the loop executes. If you start at 9 and go down to 0, that will give you 10 iterations (9, 8, 7, 6, 5, 4, 3, 2, 1, 0). The loop will stop before it checks `-1`, which would be the 11th check.\n\nSo, to summarize, if `num` starts at 9, the loop will iterate 10 times, not 11. \n\nWhat changes would you consider making to ensure `notAFactorial()` correctly calculates the factorial?"
+    },
+    {
+        "role": "user",
+        "content": "For notAFactorial(), if num is 9 then that means that total is 0 to start and num is not less than 0 therefore we enter the while loop because num is equal to num. After that num is still not less than 0 therefore we enter the else statement where the total is now equal to 0 * 9 which is equal to 0 right? (Because 0 times anything is 0) After that the number is equal to 8 because num = 9 - 1. Then we enter the while loop again because 8 = 8, and again because 7 = 7, and again because 6 = 6, and again because 5 = 5, and again because 4 = 4, and again because 3 = 3, and again because 2 = 2, and again because 1 = 1, and again because 0 = 0, and again because -1 = -1 but on this iteration we break because num < 0. Therefore we iterate through the loop 11 times?"
+    },
+    {
+        "role": "assistant",
+        "content": "You've done a great job analyzing the flow of the `notAFactorial()` function! However, there's a misunderstanding in how the multiplication and initialization of `total` work. \n\n1. **Initialization of Total**: You mentioned that `total` starts at 0. If you multiply anything by 0, the result will always be 0. Instead, to calculate a factorial, you should start `total` at 1.\n\n2. **Loop Condition**: The while loop condition `while (num == num)` is always true for any number. This will lead to an infinite loop if not addressed correctly. Instead, you should check for a condition that can eventually become false (like checking if `num >= 0`).\n\n3. **Factorial Logic**: Remember, the factorial of a number \\( n \\) (denoted as \\( n! \\)) is the product of all positive integers up to \\( n \\). Think about how you can build this product using a loop.\n\nTo summarize:\n- Change the initialization of `total` to 1.\n- Modify the while loop to check for a condition that can eventually become false, ensuring the loop will terminate.\n- Ensure that you multiply `total` by `num` instead of the current value of `total` being zero.\n\n### Questions for You:\n- How would you change the initialization of `total` to start with the correct value for multiplying?\n- What condition would you set in the while loop to ensure it stops when you've finished calculating the factorial?\n- Can you think of a way to incorporate the logic of factorial calculation into the loop?\n\nThese points should help you refine the `notAFactorial()` function!"
+    },
+    {
+        "role": "user",
+        "content": "For notAFactorial(), if num is 9 then that means that total is 0 to start and num is not less than 0 therefore we enter the while loop because num is equal to num. After that num is still not less than 0 therefore we enter the else statement where the total is now equal to 0 * 9 which is equal to 0 right? (Because 0 times anything is 0) After that the number is equal to 8 because num = 9 - 1. Then we enter the while loop again because 8 = 8, and again because 7 = 7, and again because 6 = 6, and again because 5 = 5, and again because 4 = 4, and again because 3 = 3, and again because 2 = 2, and again because 1 = 1, and again because 0 = 0, and again because -1 = -1 but on this iteration we break because num < 0. Therefore we iterate through the loop 11 times?\n\ndef notAFactorial(num):  # there are 2 things wrong with this--how do we fix it to make it return the factorial?\n    total = 0\n    if num < 0:\n        num = num * (-1)\n    while (num == num):\n        if num < 0:\n            break\n        else:\n            total = total * num\n            num = num - 1\n    return total\n\n"
+    },
+    {
+        "role": "assistant",
+        "content": "To make the `askForInput()` function loop forever, you want to ensure that the condition in the `while` loop always evaluates to `True`. \n\nHere are some hints to guide you:\n\n1. **Infinite Loop Basics**: An infinite loop can be created using a `while` statement where the condition is always true. Think about what condition you could use that will never change.\n\n2. **Common Patterns**: You might consider using `while True:`. This is a common way to create an infinite loop in Python. \n\n3. **Breaking the Loop**: If you want to eventually break out of the loop based on user input, you could still include a check inside the loop. However, if your goal is to loop indefinitely, you might not even need that check.\n\n4. **Example Syntax**: The syntax would look something like this:\n   ```python\n   while True:\n       # your code here\n   ```\n\nTry modifying your `while` loop using these hints, and see how it affects the function!"
+    },
+    {
+        "role": "user",
+        "content": "def askForInput():\n    while (input(\"Would you like to go again? y/n \\n\") != \"n\"):\n        num = int(input(\"Give me a number! \\n\"))\n        fact = notAFactorial(num)\n        print(\"The factorial of \" + str(num) + \" is \" + str(fact))\n    print(\"\\nGoodbye!!\")\n\nHow can we change this so that it loops forever"
+    },
+    {
+        "role": "assistant",
+        "content": "That's an interesting question! Let's break it down a bit.\n\nWhen you use `input()`, it prompts the user for input every time it is called. So if you have `while input() == input()`, you're essentially asking for two separate inputs each time the loop iterates. \n\n1. What do you think will happen on the first iteration of this loop? \n2. How does the condition of the `while` loop affect how many times it will run?\n3. Is there a way to keep the initial value for comparison in the loop without asking for input multiple times each iteration?\n\nThink about how you might want to store a value to compare against in a loop. This will help you understand how to structure such a loop correctly!"
+    },
+    {
+        "role": "user",
+        "content": "Would while input() == input() work?"
+    },
+    {
+        "role": "assistant",
+        "content": "Great question! Let's break it down.\n\nFirst, consider the condition in the while loop: `while(num == num)`. What do you think this condition will evaluate to? How often does it change during the execution of the loop?\n\nNow, think about what it means for a while loop to run based on that condition. If the condition is always true (like `num == num`), does that mean the loop will ever terminate? \n\nNext, look at the logic inside the loop. If `num` never changes in a way that affects the `while` condition, what do you think will happen? \n\nThese questions should help you analyze the behavior of the loop and understand its execution time! What do you think?"
+    },
+    {
+        "role": "user",
+        "content": "How long does the actual while loop for notAFactorial run, when ignoring what happens inside of it? (how long does while(num == num) run?\ndef notAFactorial(num):  # there are 2 things wrong with this--how do we fix it to make it return the factorial?\n    total = 0\n    if num < 0:\n        num = num * (-1)\n    while (num == num):\n        if num < 0:\n            break\n        else:\n            total = total * num\n            num = num - 1\n    return total"
+    }
+]
