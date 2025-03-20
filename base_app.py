@@ -173,7 +173,7 @@ class App:
         container_height = 650
         # Left column: Code editor
         with editor_col:
-            st.subheader("Code Editor")
+            st.subheader("Drona Lab")
             with st.container(height=container_height):
                 # Display py_code editor with loaded file content
                 ss.pgm_code = py_code = st_ace(value=ss.pgm_code, language='python', theme=ss.theme,
@@ -197,7 +197,7 @@ class App:
 
         # Right column: Chatbot area
         with chatbot_col:
-            st.subheader('Drona: codeGuru')
+            st.subheader('DronaHint: Get Clues, Not Solutions')
             with st.container(height=container_height, key='chat_history', border=True):
                 # Query input
                 if query := st.chat_input("I'm here to help you out with the coding assignment", key='chat_input'):
